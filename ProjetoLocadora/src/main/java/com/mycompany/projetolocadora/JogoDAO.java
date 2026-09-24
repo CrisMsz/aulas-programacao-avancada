@@ -14,46 +14,55 @@ import java.util.List;
  * @author Home
  */
 public class JogoDAO {
-    public void add(Jogo j) {
-        try {
-            Connection c = Conexao.getCon();
-            String sql = "INSERT INTO jogo (nome, categoria, valor, disponivel) VALUES ('" 
-                    + j.getN() + "', '" + j.getCat() + "', " + j.getV() + ", " + j.isD() + ")";
-            PreparedStatement st = c.prepareStatement(sql);
-            st.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Erro add: " + e.getMessage());
+    public void salvar(Jogo jogo) {
+        String sql = "INSERT INTO jogo (nome, categoria, valor, disponivel) VALUES (?, ?, ?, ?)";
+        try (Connection conn = Conexao.getCon();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, jogo.getNome());
+            stmt.setString(2, jogo.getCategoria());
+            stmt.setDouble(3, jogo.getValor());
+            stmt.setBoolean(4, jogo.isDisponivel());
+            stmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar jogo: " + e.getMessage());
         }
     }
 
-    public List<Jogo> get() {
+    public List<Jogo> listar() {
         List<Jogo> lista = new ArrayList<>();
-        try {
-            Connection c = Conexao.getCon();
-            PreparedStatement st = c.prepareStatement("SELECT * FROM jogo ORDER BY id_jogo");
-            ResultSet rs = st.executeQuery();
+        String sql = "SELECT * FROM jogo ORDER BY id_jogo";
+        
+        try (Connection conn = Conexao.getCon();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
             while (rs.next()) {
-                Jogo aux = new Jogo();
-                aux.setI(rs.getInt("id_jogo"));
-                aux.setN(rs.getString("nome"));
-                aux.setCat(rs.getString("categoria"));
-                aux.setV(rs.getDouble("valor"));
-                aux.setD(rs.getBoolean("disponivel"));
-                lista.add(aux);
+                Jogo jogo = new Jogo();
+                jogo.setId(rs.getInt("id_jogo"));
+                jogo.setNome(rs.getString("nome"));
+                jogo.setCategoria(rs.getString("categoria"));
+                jogo.setValor(rs.getDouble("valor"));
+                jogo.setDisponivel(rs.getBoolean("disponivel"));
+                lista.add(jogo);
             }
-        } catch (Exception ex) {
-            System.out.println(ex);
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar jogos: " + e.getMessage());
         }
         return lista;
     }
 
-    public void rem(int id) {
-        try {
-            Connection c = Conexao.getCon();
-            PreparedStatement st = c.prepareStatement("DELETE FROM jogo WHERE id_jogo = " + id);
-            st.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
+    public void excluir(int id) {
+        String sql = "DELETE FROM jogo WHERE id_jogo = ?";
+        try (Connection conn = Conexao.getCon();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.err.println("Erro ao excluir jogo: " + e.getMessage());
         }
     }
 }
