@@ -9,34 +9,34 @@ package com.mycompany.projetolocadora;
  * @author Home
  */
 public class Jogo {
-    private Integer i;
-    private String n;
-    private String cat;
-    private double v;
-    private boolean d;
+    private Integer id;
+    private String nome;
+    private String categoria;
+    private double valor;
+    private boolean disponivel;
 
     public Jogo() {}
 
-    public Jogo(Integer i, String n, String cat, double v, boolean d) {
-        this.i = i;
-        this.n = n;
-        this.cat = cat;
-        this.v = v;
-        this.d = d;
+    public Jogo(Integer id, String nome, String categoria, double valor, boolean disponivel) {
+        this.id = id;
+        this.nome = nome;
+        this.categoria = categoria;
+        this.valor = valor;
+        this.disponivel = disponivel;
     }
 
-    public Integer getI() { return i; }
-    public void setI(Integer i) { this.i = i; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getN() { return n; }
-    public void setN(String n) { this.n = n; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getCat() { return cat; }
-    public void setCat(String cat) { this.cat = cat; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
-    public double getV() { return v; }
-    public void setV(double v) { this.v = v; }
+    public double getValor() { return valor; }
+    public void setValor(double valor) { this.valor = valor; }
 
-    public boolean isD() { return d; }
-    public void setD(boolean d) { this.d = d; }
+    public boolean isDisponivel() { return disponivel; }
+    public void setDisponivel(boolean disponivel) { this.disponivel = disponivel; }
 }
