@@ -10,33 +10,29 @@ package com.mycompany.projetolocadora;
  */
 public class Jogo {
     private Integer id;
-    private String nome;
-    private String categoria;
-    private double valor;
-    private boolean disponivel;
+    private Integer idPlataforma;
+    private String titulo;
+    private String genero;
+    private double valorDiaria;
 
     public Jogo() {}
 
-    public Jogo(Integer id, String nome, String categoria, double valor, boolean disponivel) {
+    public Jogo(Integer id, Integer idPlataforma, String titulo, String genero, double valorDiaria) {
         this.id = id;
-        this.nome = nome;
-        this.categoria = categoria;
-        this.valor = valor;
-        this.disponivel = disponivel;
+        this.idPlataforma = idPlataforma;
+        this.titulo = titulo;
+        this.genero = genero;
+        this.valorDiaria = valorDiaria;
     }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
-
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
-
-    public double getValor() { return valor; }
-    public void setValor(double valor) { this.valor = valor; }
-
-    public boolean isDisponivel() { return disponivel; }
-    public void setDisponivel(boolean disponivel) { this.disponivel = disponivel; }
+    public Integer getIdPlataforma() { return idPlataforma; }
+    public void setIdPlataforma(Integer idPlataforma) { this.idPlataforma = idPlataforma; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getGenero() { return genero; }
+    public void setGenero(String genero) { this.genero = genero; }
+    public double getValorDiaria() { return valorDiaria; }
+    public void setValorDiaria(double valorDiaria) { this.valorDiaria = valorDiaria; }
 }

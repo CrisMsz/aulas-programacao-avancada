@@ -30,26 +30,26 @@ public class JogoDialog extends javax.swing.JFrame {
     }
     
     private void limparCampos() {
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jCheckBox1.setSelected(false);
+        txtNomeJogo.setText("");
+        txtGenero.setText("");
+        txtValor.setText("");
+        checkDisponivel.setSelected(false);
     }
     
 private void carregarTabela() {
-        if (jTable1 == null || jTable1.getModel() == null) return;
+        if (tblListar == null || tblListar.getModel() == null) return;
 
         List<Jogo> lista = jogoDAO.listar();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblListar.getModel();
         model.setRowCount(0);
 
         for (Jogo jogo : lista) {
             model.addRow(new Object[]{
                 jogo.getId(),
-                jogo.getNome(),
-                jogo.getCategoria(),
-                jogo.getValor(),
-                jogo.isDisponivel() ? "Sim" : "Não"
+                jogo.getIdPlataforma(),
+                jogo.getTitulo(),
+                jogo.getGenero(),
+                jogo.getValorDiaria()
             });
         }
         
@@ -66,33 +66,35 @@ private void carregarTabela() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        btnSalvar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
+        txtNomeJogo = new javax.swing.JTextField();
+        txtGenero = new javax.swing.JTextField();
+        txtValor = new javax.swing.JTextField();
+        checkDisponivel = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblListar = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        txtPlataforma = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Salvar");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(this::btnSalvarActionPerformed);
 
-        jButton2.setText("Excluir");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(this::btnExcluirActionPerformed);
 
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        txtNomeJogo.addActionListener(this::txtNomeJogoActionPerformed);
 
-        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        txtValor.addActionListener(this::txtValorActionPerformed);
 
-        jCheckBox1.setText("Disponível");
+        checkDisponivel.setText("Disponível");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblListar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -103,13 +105,17 @@ private void carregarTabela() {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblListar);
 
         jLabel1.setText("Nome do Jogo:");
 
-        jLabel2.setText("Categoria:");
+        jLabel2.setText("Genero:");
 
         jLabel3.setText("Valor:");
+
+        txtPlataforma.addActionListener(this::txtPlataformaActionPerformed);
+
+        jLabel4.setText("Plataforma:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,24 +128,30 @@ private void carregarTabela() {
                         .addComponent(jLabel3)
                         .addGap(80, 364, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton1)
-                                        .addGap(26, 26, 26)
-                                        .addComponent(jButton2))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(btnSalvar)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnExcluir))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtValor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtNomeJogo, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtGenero, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox1)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(checkDisponivel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txtPlataforma, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,22 +159,26 @@ private void carregarTabela() {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNomeJogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPlataforma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43))
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(checkDisponivel)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnExcluir))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                 .addContainerGap())
@@ -171,51 +187,57 @@ private void carregarTabela() {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nome = jTextField1.getText();
-        String categoria = jTextField2.getText();
-        String valorTexto = jTextField3.getText();
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        String titulo = txtNomeJogo.getText();
+        String genero = txtGenero.getText();
+        String valorTexto = txtValor.getText();
+        String plataformaTexto = txtPlataforma.getText();
 
-        if (nome == null || nome.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nome é obrigatório");
+        if (titulo == null || titulo.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Título é obrigatório");
             return;
         }
 
-        if (categoria == null || categoria.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Categoria é obrigatória");
+        if (genero == null || genero.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Gênero é obrigatório");
             return;
         }
 
         if (valorTexto == null || valorTexto.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Valor é obrigatório");
+            JOptionPane.showMessageDialog(null, "Valor da diária é obrigatório");
+            return;
+        }
+
+        if (plataformaTexto == null || plataformaTexto.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "ID da Plataforma é obrigatório");
             return;
         }
 
         try {
-            double valor = Double.parseDouble(valorTexto);
-            boolean disponivel = jCheckBox1.isSelected();
+            double valorDiaria = Double.parseDouble(valorTexto);
+            int idPlataforma = Integer.parseInt(plataformaTexto);
 
-            Jogo jogo = new Jogo(null, nome, categoria, valor, disponivel);
+            Jogo jogo = new Jogo(null, idPlataforma, titulo, genero, valorDiaria);
             jogoDAO.salvar(jogo);
 
             limparCampos();
             carregarTabela();
             JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!");
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Valor numérico inválido");
+            JOptionPane.showMessageDialog(null, "ID da Plataforma e Valor da Diária devem ser numéricos válidos!");
         }
     
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int linhaSelecionada = jTable1.getSelectedRow();
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int linhaSelecionada = tblListar.getSelectedRow();
         
         if (linhaSelecionada == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um jogo na tabela para excluir");
             return;
         }
 
-        int idExcluir = (Integer) jTable1.getValueAt(linhaSelecionada, 0);
+        int idExcluir = (Integer) tblListar.getValueAt(linhaSelecionada, 0);
 
         int resposta = JOptionPane.showConfirmDialog(null, "Excluir jogo selecionado?", "Atenção", JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {
@@ -224,15 +246,19 @@ private void carregarTabela() {
             carregarTabela();
             JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtNomeJogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeJogoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtNomeJogoActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txtValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txtValorActionPerformed
+
+    private void txtPlataformaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlataformaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlataformaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,16 +285,18 @@ private void carregarTabela() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JCheckBox checkDisponivel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable tblListar;
+    private javax.swing.JTextField txtGenero;
+    private javax.swing.JTextField txtNomeJogo;
+    private javax.swing.JTextField txtPlataforma;
+    private javax.swing.JTextField txtValor;
     // End of variables declaration//GEN-END:variables
 }
