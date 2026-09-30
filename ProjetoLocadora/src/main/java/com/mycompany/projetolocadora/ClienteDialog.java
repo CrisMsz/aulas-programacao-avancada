@@ -5,7 +5,6 @@
 package com.mycompany.projetolocadora;
 
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -17,17 +16,39 @@ import java.util.logging.Logger;
  * @author Home
  */
 public class ClienteDialog extends javax.swing.JFrame {
-    private ClienteDAO dao = new ClienteDAO();
+    private ClienteDAO clienteDAO = new ClienteDAO();
     private Integer id = null;
 
-    /**
-     * Creates new form ClienteDialog
-     * @param parent
-     * @param modal
-     */
     public ClienteDialog() {
         initComponents();
-        carregar();
+        setLocationRelativeTo(null);
+        carregarTabela();
+    }
+    
+    private void limparCampos() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        id = null;
+    }
+
+    private void carregarTabela() {
+        if (jTable1 == null || jTable1.getModel() == null) return;
+
+        List<Cliente> lista = clienteDAO.listar();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        for (Cliente cliente : lista) {
+            model.addRow(new Object[]{
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getTelefone(),
+                cliente.getEmail()
+            });
+        }
     }
 
     
@@ -129,66 +150,45 @@ public class ClienteDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String n = jTextField1.getText();
-        String c = jTextField2.getText();
-        String t = jTextField3.getText();
-        String e = jTextField4.getText();
+        String nome = jTextField1.getText();
+        String cpf = jTextField2.getText();
+        String telefone = jTextField3.getText();
+        String email = jTextField4.getText();
 
-        if (n != null) {
-            if (!n.trim().isEmpty()) {
-                if (c != null && !c.trim().isEmpty()) {
-                    Cliente cli = new Cliente(id, n, c, t, e);
-                    dao.proc(cli);
-
-                    jTextField1.setText("");
-                    jTextField2.setText("");
-                    jTextField3.setText("");
-                    jTextField4.setText("");
-                    id = null;
-
-                    carregar();
-                    JOptionPane.showMessageDialog(this, "Salvo!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "CPF inválido");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Nome em branco");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Nome nulo");
+        if (nome == null || nome.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nome é obrigatório");
+            return;
         }
+
+        if (cpf == null || cpf.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "CPF é obrigatório");
+            return;
+        }
+
+        Cliente cliente = new Cliente(id, nome, cpf, telefone, email);
+        clienteDAO.salvar(cliente);
+
+        limparCampos();
+        carregarTabela();
+        JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!");
+    
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (id != null) {
-            if (JOptionPane.showConfirmDialog(this, "Confirma excluir?") == 0) { 
-                dao.del(id);
-                jTextField1.setText("");
-                jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                id = null;
-                carregar();
-                JOptionPane.showMessageDialog(this, "Excluído!");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecione um registro na tabela");
+        if (id == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente na tabela para excluir");
+            return;
+        }
+
+        int resposta = JOptionPane.showConfirmDialog(null, "Confirma excluir?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) { 
+            clienteDAO.excluir(id);
+            limparCampos();
+            carregarTabela();
+            JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void carregar() {
-        if (jTable1 == null || jTable1.getModel() == null) return;
-        
-        List<Cliente> lista = dao.buscar();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-        for (int i = 0; i < lista.size(); i++) {
-            Cliente c = lista.get(i);
-            model.addRow(new Object[]{c.getId(), c.getN(), c.getC(), c.getT(), c.getE()});
-        }
-    }
-    
     
     /**
      * @param args the command line arguments

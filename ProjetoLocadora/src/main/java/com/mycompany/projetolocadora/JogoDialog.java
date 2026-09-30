@@ -18,28 +18,43 @@ import java.util.logging.Logger;
  */
 public class JogoDialog extends javax.swing.JFrame {
     
-   private JogoDAO dao = new JogoDAO();
-    private Integer id = null;
+   private JogoDAO jogoDAO = new JogoDAO();
 
     /**
      * Creates new form JogoDialog
      */
     public JogoDialog() {      
         initComponents();
+        setLocationRelativeTo(null);
         carregarTabela();
     }
+    
+    private void limparCampos() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jCheckBox1.setSelected(false);
+    }
+    
 private void carregarTabela() {
         if (jTable1 == null || jTable1.getModel() == null) return;
 
-        List<Jogo> list = dao.get();
+        List<Jogo> lista = jogoDAO.listar();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < list.size(); i++) {
-            Jogo j = list.get(i);
-            model.addRow(new Object[]{j.getI(), j.getN(), j.getCat(), j.getV(), j.isD() ? "Sim" : "Não"});
+        for (Jogo jogo : lista) {
+            model.addRow(new Object[]{
+                jogo.getId(),
+                jogo.getNome(),
+                jogo.getCategoria(),
+                jogo.getValor(),
+                jogo.isDisponivel() ? "Sim" : "Não"
+            });
         }
-    }
+        
+        
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,50 +153,57 @@ private void carregarTabela() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String n = jTextField1.getText();
-        String cat = jTextField2.getText();
-        String vStr = jTextField3.getText();
+        String nome = jTextField1.getText();
+        String categoria = jTextField2.getText();
+        String valorTexto = jTextField3.getText();
 
-        if (n != null && !n.trim().isEmpty()) {
-            if (cat != null && !cat.trim().isEmpty()) {
-                if (vStr != null && !vStr.trim().isEmpty()) {
-                    try {
-                        double v = Double.parseDouble(vStr);
-                        boolean disp = jCheckBox1.isSelected();
-
-                        Jogo j = new Jogo(id, n, cat, v, disp);
-                        dao.add(j);
-
-                        jTextField1.setText("");
-                        jTextField2.setText("");
-                        jTextField3.setText("");
-                        jCheckBox1.setSelected(false);
-                        id = null;
-
-                        carregarTabela();
-                        JOptionPane.showMessageDialog(this, "Jogo salvo!");
-                    } catch (Exception ex) {
-                        System.out.println("Erro ao salvar: " + ex.getMessage());
-                        JOptionPane.showMessageDialog(this, "Valor inválido");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Valor obrigatório");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Categoria obrigatória");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Nome obrigatório");
+        if (nome == null || nome.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nome é obrigatório");
+            return;
         }
+
+        if (categoria == null || categoria.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Categoria é obrigatória");
+            return;
+        }
+
+        if (valorTexto == null || valorTexto.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Valor é obrigatório");
+            return;
+        }
+
+        try {
+            double valor = Double.parseDouble(valorTexto);
+            boolean disponivel = jCheckBox1.isSelected();
+
+            Jogo jogo = new Jogo(null, nome, categoria, valor, disponivel);
+            jogoDAO.salvar(jogo);
+
+            limparCampos();
+            carregarTabela();
+            JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Valor numérico inválido");
+        }
+    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (id != null) {
-            if (JOptionPane.showConfirmDialog(this, "Excluir?") == 0) {
-                dao.rem(id);
-                carregarTabela();
-                JOptionPane.showMessageDialog(this, "OK!");
-            }
+        int linhaSelecionada = jTable1.getSelectedRow();
+        
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um jogo na tabela para excluir");
+            return;
+        }
+
+        int idExcluir = (Integer) jTable1.getValueAt(linhaSelecionada, 0);
+
+        int resposta = JOptionPane.showConfirmDialog(null, "Excluir jogo selecionado?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            jogoDAO.excluir(idExcluir);
+            limparCampos();
+            carregarTabela();
+            JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
