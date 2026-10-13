@@ -4,7 +4,6 @@
  */
 package com.mycompany.projetolocadora;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +16,7 @@ import java.util.List;
  * @author Home
  */
 public class ClienteDAO {
+
     public void salvar(Cliente cliente) {
         if (cliente.getId() == null) {
             inserir(cliente);
@@ -28,8 +28,7 @@ public class ClienteDAO {
     private void inserir(Cliente cliente) {
         String sql = "INSERT INTO cliente (nome, cpf, telefone, email) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCpf());
@@ -45,8 +44,7 @@ public class ClienteDAO {
     private void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, cpf = ?, telefone = ?, email = ? WHERE id_cliente = ?";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCpf());
@@ -63,8 +61,7 @@ public class ClienteDAO {
     public void excluir(int id) {
         String sql = "DELETE FROM cliente WHERE id_cliente = ?";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -77,17 +74,15 @@ public class ClienteDAO {
         List<Cliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM cliente ORDER BY id_cliente";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Cliente c = new Cliente(
-                    rs.getInt("id_cliente"),
-                    rs.getString("nome"),
-                    rs.getString("cpf"),
-                    rs.getString("telefone"),
-                    rs.getString("email")
+                        rs.getInt("id_cliente"),
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getString("email")
                 );
                 lista.add(c);
             }
@@ -95,6 +90,29 @@ public class ClienteDAO {
             System.err.println("Erro ao listar clientes: " + e.getMessage());
         }
 
+        return lista;
+    }
+
+    public List<Cliente> buscarPorIdOuCpf(String termo) {
+        List<Cliente> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cliente WHERE CAST(id_cliente AS TEXT) = ? OR cpf LIKE ? ORDER BY id_cliente";
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, termo);
+            stmt.setString(2, "%" + termo + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Cliente(
+                            rs.getInt("id_cliente"),
+                            rs.getString("nome"),
+                            rs.getString("cpf"),
+                            rs.getString("telefone"),
+                            rs.getString("email")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro na busca de cliente: " + e.getMessage());
+        }
         return lista;
     }
 }
