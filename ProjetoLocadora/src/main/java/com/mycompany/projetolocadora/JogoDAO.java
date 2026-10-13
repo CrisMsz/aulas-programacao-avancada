@@ -4,7 +4,6 @@
  */
 package com.mycompany.projetolocadora;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +16,8 @@ import java.util.List;
  * @author Home
  */
 public class JogoDAO {
-   public void salvar(Jogo jogo) {
+
+    public void salvar(Jogo jogo) {
         if (jogo.getId() == null) {
             inserir(jogo);
         } else {
@@ -28,8 +28,7 @@ public class JogoDAO {
     private void inserir(Jogo jogo) {
         String sql = "INSERT INTO jogo (id_plataforma, titulo, genero, valor_diaria) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, jogo.getIdPlataforma());
             stmt.setString(2, jogo.getTitulo());
@@ -45,8 +44,7 @@ public class JogoDAO {
     private void atualizar(Jogo jogo) {
         String sql = "UPDATE jogo SET id_plataforma = ?, titulo = ?, genero = ?, valor_diaria = ? WHERE id_jogo = ?";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, jogo.getIdPlataforma());
             stmt.setString(2, jogo.getTitulo());
@@ -63,8 +61,7 @@ public class JogoDAO {
     public void excluir(int id) {
         String sql = "DELETE FROM jogo WHERE id_jogo = ?";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -77,17 +74,15 @@ public class JogoDAO {
         List<Jogo> lista = new ArrayList<>();
         String sql = "SELECT * FROM jogo ORDER BY id_jogo";
 
-        try (Connection conn = Conexao.obterConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Jogo j = new Jogo(
-                    rs.getInt("id_jogo"),
-                    rs.getInt("id_plataforma"),
-                    rs.getString("titulo"),
-                    rs.getString("genero"),
-                    rs.getDouble("valor_diaria")
+                        rs.getInt("id_jogo"),
+                        rs.getInt("id_plataforma"),
+                        rs.getString("titulo"),
+                        rs.getString("genero"),
+                        rs.getDouble("valor_diaria")
                 );
                 lista.add(j);
             }
@@ -95,6 +90,50 @@ public class JogoDAO {
             System.err.println("Erro ao listar jogos: " + e.getMessage());
         }
 
+        return lista;
+    }
+
+    public List<Jogo> listarPorPlataforma(int idPlataforma) {
+        List<Jogo> lista = new ArrayList<>();
+        String sql = "SELECT * FROM jogo WHERE id_plataforma = ? ORDER BY titulo";
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idPlataforma);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Jogo(
+                            rs.getInt("id_jogo"),
+                            rs.getInt("id_plataforma"),
+                            rs.getString("titulo"),
+                            rs.getString("genero"),
+                            rs.getDouble("valor_diaria")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar por plataforma: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public List<Jogo> buscarPorTitulo(String titulo) {
+        List<Jogo> lista = new ArrayList<>();
+        String sql = "SELECT * FROM jogo WHERE LOWER(titulo) LIKE LOWER(?) ORDER BY id_jogo";
+        try (Connection conn = Conexao.obterConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + titulo + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Jogo(
+                            rs.getInt("id_jogo"),
+                            rs.getInt("id_plataforma"),
+                            rs.getString("titulo"),
+                            rs.getString("genero"),
+                            rs.getDouble("valor_diaria")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar jogo por título: " + e.getMessage());
+        }
         return lista;
     }
 }
