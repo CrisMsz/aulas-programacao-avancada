@@ -4,7 +4,6 @@
  */
 package com.mycompany.projetolocadora;
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.logging.Logger;
  * @author Home
  */
 public class ClienteDialog extends javax.swing.JFrame {
+
     private ClienteDAO clienteDAO = new ClienteDAO();
     private Integer id = null;
 
@@ -24,7 +24,7 @@ public class ClienteDialog extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         carregarTabela();
     }
-    
+
     private void limparCampos() {
         txtNomeCliente.setText("");
         txtCpf.setText("");
@@ -34,7 +34,9 @@ public class ClienteDialog extends javax.swing.JFrame {
     }
 
     private void carregarTabela() {
-        if (tblListar == null || tblListar.getModel() == null) return;
+        if (tblListar == null || tblListar.getModel() == null) {
+            return;
+        }
 
         List<Cliente> lista = clienteDAO.listar();
         DefaultTableModel model = (DefaultTableModel) tblListar.getModel();
@@ -51,9 +53,7 @@ public class ClienteDialog extends javax.swing.JFrame {
         }
     }
 
-    
     // </editor-fold>    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -181,8 +181,8 @@ public class ClienteDialog extends javax.swing.JFrame {
             return;
         }
 
-        if (cpf == null || cpf.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "CPF é obrigatório");
+        if (!ValidadorCPF.isValido(cpf)) {
+            JOptionPane.showMessageDialog(this, "CPF inválido! Verifique a numeração digitada.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -192,8 +192,8 @@ public class ClienteDialog extends javax.swing.JFrame {
         limparCampos();
         carregarTabela();
         JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!");
-    
-        
+
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -203,7 +203,7 @@ public class ClienteDialog extends javax.swing.JFrame {
         }
 
         int resposta = JOptionPane.showConfirmDialog(null, "Confirma excluir?", "Atenção", JOptionPane.YES_NO_OPTION);
-        if (resposta == JOptionPane.YES_OPTION) { 
+        if (resposta == JOptionPane.YES_OPTION) {
             clienteDAO.excluir(id);
             limparCampos();
             carregarTabela();
@@ -222,7 +222,7 @@ public class ClienteDialog extends javax.swing.JFrame {
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -240,7 +240,7 @@ public class ClienteDialog extends javax.swing.JFrame {
                 }
             }
         } catch (Exception ex) {
-            
+
             Logger.getLogger(ClienteDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
