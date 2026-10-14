@@ -35,6 +35,11 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnAbrirLocacao" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="137" max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -47,7 +52,9 @@
                   <Component id="btnCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnJogos" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="148" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnAbrirLocacao" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="113" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -73,6 +80,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Selecione um Servi&#xe7;o"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnAbrirLocacao">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Loca&#xe7;&#xe3;o de Jogos"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAbrirLocacaoActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

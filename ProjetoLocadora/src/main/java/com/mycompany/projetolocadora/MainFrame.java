@@ -20,7 +20,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setLocationRelativeTo(null);
-        
+
     }
 
     /**
@@ -35,6 +35,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnCliente = new javax.swing.JButton();
         btnJogos = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnAbrirLocacao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,6 +46,9 @@ public class MainFrame extends javax.swing.JFrame {
         btnJogos.addActionListener(this::btnJogosActionPerformed);
 
         jLabel1.setText("Selecione um Serviço");
+
+        btnAbrirLocacao.setText("Locação de Jogos");
+        btnAbrirLocacao.addActionListener(this::btnAbrirLocacaoActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -60,6 +64,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(144, 144, 144)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAbrirLocacao)
+                .addGap(137, 137, 137))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,7 +78,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCliente)
                     .addComponent(btnJogos))
-                .addContainerGap(148, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAbrirLocacao)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         pack();
@@ -85,6 +95,11 @@ public class MainFrame extends javax.swing.JFrame {
         JogoDialog jogoDialog = new JogoDialog();
         jogoDialog.setVisible(true);
     }//GEN-LAST:event_btnJogosActionPerformed
+
+    private void btnAbrirLocacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirLocacaoActionPerformed
+        LocacaoDialog  locacaodialog = new LocacaoDialog();
+        locacaodialog.setVisible(true);
+    }//GEN-LAST:event_btnAbrirLocacaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -113,6 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrirLocacao;
     private javax.swing.JButton btnCliente;
     private javax.swing.JButton btnJogos;
     private javax.swing.JLabel jLabel1;
